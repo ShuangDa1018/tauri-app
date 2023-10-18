@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .log-item-string {
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script>
+    let arr = new Array(10000).fill(0);
+    arr = arr.map((it, index) => {
+      return { name: index + "name", index: index };
+    });
+
+    const tableHeader = [
+      { key: "ts_d", rate: 0.25, name: "时间" },
+      { key: "level", rate: 0.1, name: "等级" },
+      { key: "loc", rate: 0.3, name: "路径", startPos: true },
+      { key: "param", rate: 0.35, name: "内容", startPos: true },
+    ];
+
+    const appElement = document.getElementById("root");
+
+    let data = arr;
+    let dataIndex = 0;
+
+    function updateData() {
+      data = data.reverse();
+      dataIndex++;
+      if (dataIndex >= 1000) dataIndex = 0;
+      render();
+    }
+
+    function render() {
+      appElement.innerHTML = "";
+      data.slice(-100).forEach((it, index) => {
+        const logItem = document.createElement("div");
+        logItem.classList.add("log-item-string");
+        logItem.innerHTML = it.name + "===";
+
+        tableHeader.forEach(({ key }) => {
+          const span = document.createElement("span");
+          span.className = "log-item-string";
+          span.textContent = key + "-----";
+          logItem.appendChild(span);
+        });
+
+        appElement.appendChild(logItem);
+      });
+    }
+
+    render();
+
+    setInterval(updateData, 100);
+
+  </script>
+</body>
+</html>
